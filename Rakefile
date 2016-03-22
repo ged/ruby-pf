@@ -2,9 +2,12 @@
 
 begin
 	require 'hoe'
-rescue LoadError
-	abort "This Rakefile requires hoe (gem install hoe)"
+	require 'rake/extensiontask'
+rescue LoadError => err
+	abort "This Rakefile requires hoe and rake-compiler (gem install hoe rake-compiler)"
 end
+
+require 'rake/clean'
 
 GEMSPEC = 'ruby-pf.gemspec'
 
@@ -14,18 +17,25 @@ Hoe.plugin :signing
 Hoe.plugin :deveiate
 
 Hoe.plugins.delete :rubyforge
-Hoe.plugins.delete :gemcutter # Remove for public gems
 
 hoespec = Hoe.spec 'ruby-pf' do |spec|
-	spec.readme_file = 'README.rdoc'
-	spec.history_file = 'History.rdoc'
-	spec.extra_rdoc_files = FileList[ '*.rdoc' ]
-	spec.license 'BSD'
+	spec.readme_file = 'README.md'
+	spec.history_file = 'History.md'
+	spec.extra_rdoc_files = FileList[ '*.rdoc', '*.md' ]
+	spec.license 'BSD-3-Clause'
+	spec.urls = {
+		home:   'http://deveiate.org/projects/ruby-pf',
+		code:   'http://bitbucket.org/ged/ruby-pf',
+		docs:   'http://deveiate.org/code/ruby-pf',
+		github: 'http://github.com/ged/ruby-pf',
+	}
 
 	spec.developer 'Michael Granger', 'ged@FaerieMUD.org'
 
 	spec.dependency 'loggability', '~> 0.11'
+	spec.dependency 'bit-struct', '~> 0.15'
 
+	spec.dependency 'rake-compiler',           '~> 0.9', :developer
 	spec.dependency 'hoe-deveiate',            '~> 0.3', :developer
 	spec.dependency 'simplecov',               '~> 0.7', :developer
 	spec.dependency 'rdoc-generator-fivefish', '~> 0.1', :developer
@@ -39,6 +49,13 @@ end
 
 
 ENV['VERSION'] ||= hoespec.spec.version.to_s
+
+# Rake-compiler task
+Rake::ExtensionTask.new( 'pf_ext' )
+task :spec => :compile
+
+CLOBBER.include( 'tmp' )
+
 
 # Run the tests before checking in
 task 'hg:precheckin' => [ :check_history, :check_manifest, :gemspec, :spec ]

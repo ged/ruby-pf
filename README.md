@@ -15,12 +15,20 @@ docs
 
 ## Description
 
+This is a Ruby interface to `pf`, the OpenBSD Packet Filter.
 
+It uses the `ioctl(2)` interface to the `/dev/pf` pseudo-device, and can be used to:
+
+- start and stop the packet filter
+- manipulate rules
+- manipulate ALTQ disciplines and queues
+- gather statistics
 
 
 ## Prerequisites
 
 * Ruby
+* A host that supports PF
 
 
 ## Installation
@@ -28,11 +36,27 @@ docs
     $ gem install ruby-pf
 
 
+
+### Building on MacOS X
+
+MacOS X versions 10.7 and later include PF, but do not include the necessary headers to compile this extension, even with developer tools installed.
+
+Fortunately Apple releases the sources for a large part of the OS on opensource.apple.com, and the necessary header is in the `xnu` source under `bsd/net`. For example, my current machine's `uname -v` is: 
+
+    Darwin Kernel Version 15.3.0: Thu Dec 10 18:40:58 PST 2015; root:xnu-3248.30.4~1/RELEASE_X86_64
+
+So I got my header from:
+
+    http://www.opensource.apple.com/source/xnu/xnu-3248.20.55/bsd/net/
+
+This (obviously) isn't really a safe way to do things, and it may screw up your firewall, segfault, or do other bad things if you mismatch versions (or maybe even if you don't). _Caveat emptor_.
+
+
 ## Contributing
 
 You can check out the current development source with Mercurial via its
-{project page}[http://bitbucket.org/ged/ruby-pf]. Or if you prefer Git, via 
-{its Github mirror}[https://github.com/ged/ruby-pf].
+[project page](http://bitbucket.org/ged/ruby-pf). Or if you prefer Git, via 
+[its Github mirror](https://github.com/ged/ruby-pf).
 
 After checking out the source, run:
 

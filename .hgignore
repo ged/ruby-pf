@@ -1,2 +1,4 @@
-/html/
-Gemfile.devel*
+tmp/
+ext/pf_ext/libkern
+ext/pf_ext/net
+ext/pf_ext/pfvar\.h$

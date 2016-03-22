@@ -8,7 +8,13 @@ root = true
 end_of_line = lf
 insert_final_newline = true
 
-# Tab indentation
+# Tab indentation for source
 [**.*]
+indent_size = 4
 indent_style = tab
+
+# Space indentation for documentation and text
+[**.{md,rdoc,txt}]
+indent_size = 4
+indent_style = space
 
